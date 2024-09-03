@@ -7,18 +7,23 @@ import { Datepicker } from "flowbite-react";
 const DebtForm = ({ fetchDebts }) => {
   const [formData, setFormData] = useState({
     name: "",
-    initialAmount: "",
-    currentBalance: "",
-    settlementAmount: "",
-    monthlyPayment: "",
-    term: "",
+    initialAmount: 0,
+    currentBalance: 0,
+    settlementAmount: 0,
+    monthlyPayment: 0,
+    term: 0,
     startDate: new Date(),
     nextPaymentDate: new Date(),
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "number" ? Number(value) : value,
+    });
   };
+    
 
   const handleDateChange = (date, dateType) => {
     setFormData((prevData) => ({

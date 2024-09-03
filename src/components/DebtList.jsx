@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { db } from "../firebase/firebaseConfig";
 import {
   collection,
@@ -8,11 +9,51 @@ import {
 } from "firebase/firestore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const DebtList = ({ debts, fetchDebts }) => {
+const DebtList = () => {
+  const [debts, setDebts] = useState([]);
+  const [totals, setTotals] = useState({
+    initialBalance: 0,
+    currentBalance: 0,
+    settlementAmount: 0,
+    monthlyPayment: 0,
+  });
+
+  const fetchDebts = () => {
+    const q = query(collection(db, "debts"));
+    onSnapshot(q, (snapshot) => {
+      let fetchedDebts = [];
+      let totalInitial = 0,
+        totalCurrent = 0,
+        totalSettlement = 0,
+        totalMonthly = 0;
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        fetchedDebts.push({ id: doc.id, ...data });
+        totalInitial += parseFloat(data.initialAmount) || 0;
+        totalCurrent += parseFloat(data.currentBalance) || 0;
+        totalSettlement += parseFloat(data.settlementAmount) || 0;
+        totalMonthly += parseFloat(data.monthlyPayment) || 0;
+      });
+
+      setDebts(fetchedDebts);
+      setTotals({
+        initialBalance: totalInitial,
+        currentBalance: totalCurrent,
+        settlementAmount: totalSettlement,
+        monthlyPayment: totalMonthly,
+      });
+    });
+  };
+
   const deleteDebt = async (id) => {
     await deleteDoc(doc(db, "debts", id));
     fetchDebts();
   };
+
+  useEffect(() => {
+    fetchDebts();
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center bg-gray-900">
@@ -84,41 +125,32 @@ const DebtList = ({ debts, fetchDebts }) => {
                 </thead>
 
                 <tbody className="bg-gray-800">
-                  {/* eslint-disable-next-line react/prop-types */}
                   {debts.map((debt) => (
                     <tr className="bg-black bg-opacity-20" key={debt.id}>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span>{debt.name}</span>
                       </td>
-
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span>{debt.initialAmount}</span>
                       </td>
-
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span>{debt.currentBalance}</span>
                       </td>
-
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span>{debt.settlementAmount}</span>
                       </td>
-
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span>{debt.monthlyPayment}</span>
                       </td>
-
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span>{debt.term}</span>
                       </td>
-
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span>{debt.startDate}</span>
                       </td>
-
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span>{debt.nextPaymentDate}</span>
                       </td>
-
                       <td className="px-6 py-4 whitespace-nowrap">
                         <button
                           onClick={() => deleteDebt(debt.id)}
@@ -126,7 +158,6 @@ const DebtList = ({ debts, fetchDebts }) => {
                         >
                           <FontAwesomeIcon icon="fa-solid fa-trash" />
                         </button>
-                        
                         <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-lg w-full sm:w-auto px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                           <FontAwesomeIcon icon="fa-solid fa-square-check" />
                         </button>
@@ -147,25 +178,25 @@ const DebtList = ({ debts, fetchDebts }) => {
                       scope="col"
                       className="px-6 py-3 text-left tracking-wider"
                     >
-                      hola
+                      {totals.initialBalance}
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 text-left tracking-wider"
                     >
-                      hola
+                      {totals.currentBalance}
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 text-left tracking-wider"
                     >
-                      hola
+                      {totals.settlementAmount}
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 text-left tracking-wider"
                     >
-                      hola
+                      {totals.monthlyPayment}
                     </th>
                     <th
                       scope="col"
