@@ -1,0 +1,31 @@
+/* @import "flowbite/dist/flowbite.css"; */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #111827;
+    color: #fff;
+  }
+}
+
+/* .react-datepicker-wrapper {
+  width: 100%;
+}
+
+.react-datepicker__input-container input {
+  @apply w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
+}
+
+.react-datepicker {
+  @apply bg-white dark:bg-gray-700 border border-gray-300 rounded-lg shadow-lg;
+}
+
+.react-datepicker__header {
+  @apply bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border-b border-gray-300;
+}
+
+.react-datepicker__day {
+  @apply text-sm text-gray-900 dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700;
+}
+
+.react-datepicker__day--selected {
+  @apply bg-blue-500 text-white hover:bg-blue-600;
+} */
